@@ -134,3 +134,35 @@ body {
   opacity: 1;
 }
 /* END Next Button */
+
+/* START Cursor Styling */
+
+.typing-cursor {
+  position: relative;
+}
+
+/* Create the cursor using ::after pseudo-element */
+.typing-cursor::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  width: 0.5px;  /* Standard cursor width */
+  height: 1em;  /* Match the line height of the text */
+  background-color: white;  /* Match the text color */
+  animation: blink 1.06s steps(2, start) infinite;
+  /* The steps(2) makes it a sharp blink rather than a fade */
+}
+
+/* Define the blink animation */
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* Optional: If you want to prevent text selection */
+.typing-cursor {
+  user-select: none;
+}
+
+/* END Cursor Styling */

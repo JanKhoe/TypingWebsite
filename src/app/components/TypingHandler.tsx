@@ -14,7 +14,11 @@ export default ({parentFunction} : TypingHandlerProps) => {
   const [unTypedLetters, setUnTypedLetters] = useState<React.ReactElement[]>([(<React.Fragment key={1}></React.Fragment>)]);
   const [WordContainers, setWordContainers] = useState<React.ReactElement[]>([]);
   const [isDoneTyping, setIsDoneTyping] = useState(false);
+  const [randomWords, setRandomWords] = useState<String[]>([]);
+  const [phrase, setPhrase] = useState<String>('')
+  const [words, setWords] = useState<String[]>([])
 
+  const letters = useRef<String[][]>([] )
   const keyIndex = useRef(0);
   const isFirstRender = useRef(true);
   const isTypingStarted = useRef<boolean>(false);
@@ -22,24 +26,49 @@ export default ({parentFunction} : TypingHandlerProps) => {
   const timeEnd = useRef<number>(0);
   const tabRef = useRef<HTMLDivElement>(null);
 
-  const phrase = "According to all known laws of aviation, there is no way a bee should be able to fly. Its wings are too small to get its fat little body off the ground. The bee, of course, flies anyway because bees don't care what humans think is impossible."
-  const words = phrase.trim().split(" ")
-  const letters:String[][] = []
+
+
+  useEffect(() => {
+    // The API request
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://random-word-api.herokuapp.com/word?number=20');  // Can also be an external API URL
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        setRandomWords(result)
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+      } finally {
+        console.log("request finsihed")  // Stop loading after the request
+      }
+    };
+
+    fetchData();
+  }, []);
 
 
 
-  words.forEach((val, index) => {
-    const splitWord = val.split('')
-    letters.push(splitWord);
-  });
+  useEffect(() => {
+    console.log(randomWords)
+    setPhrase(randomWords.join(' '))
+    setWords(randomWords)
+    letters.current = []
+    randomWords.forEach((val, index) => {
+      const splitWord = val.split('')
+      letters.current.push(splitWord);
+    });
 
-  const activeWord = words[0]
+  }, [randomWords])
+
 
 
 //Calculate JSXLetters and memoize them to reduce load time on longer phrases since itll cache the result
   var JSXLetter: React.ReactElement[] = useMemo(() =>{
+    console.log(letters)
     const lettersArray: React.ReactElement[] = [];
-    letters.forEach((val) => {
+    letters.current.forEach((val) => {
       val.forEach((val2) => {
         lettersArray.push(<Letter letter={val2} key={keyIndex.current++} className="untyped text-xl"> </Letter>);
       });
@@ -48,12 +77,12 @@ export default ({parentFunction} : TypingHandlerProps) => {
     });
     lettersArray.pop(); // Remove last space if necessary
     return lettersArray;
-  }, []);
+  }, [phrase]);
 
   useEffect(() => {
     setUnTypedLetters(JSXLetter);
 
-  }, [])
+  }, [JSXLetter])
 
   useEffect(() => {
     // Focus the input when the component mounts
@@ -79,8 +108,16 @@ export default ({parentFunction} : TypingHandlerProps) => {
     if(isCorrect){
       setUnTypedLetters((prevLetters) => {
         var currentElement = prevLetters[TypedLettersCursor]
-        var newElement = React.cloneElement(currentElement, {className: "correct text-xl"})
+        var newElement = React.cloneElement(currentElement, {className: "correct text-xl typing-cursor"})
         prevLetters[TypedLettersCursor] = newElement;
+
+        if(TypedLettersCursor > 0){
+          currentElement = prevLetters[TypedLettersCursor-1]
+          console.log(currentElement)
+          var removedCursorClass = currentElement.props.className.replace('typing-cursor', '')
+          newElement = React.cloneElement(currentElement, {className: removedCursorClass})
+          prevLetters[TypedLettersCursor-1] = newElement;
+        }
         return prevLetters;
       })
       return;
@@ -88,8 +125,15 @@ export default ({parentFunction} : TypingHandlerProps) => {
     else{
       setUnTypedLetters((prevLetters) => {
         var currentElement = prevLetters[TypedLettersCursor]
-        var newElement = React.cloneElement(currentElement, {className: "incorrect text-xl"})
+        var newElement = React.cloneElement(currentElement, {className: "incorrect text-xl typing-cursor"})
         prevLetters[TypedLettersCursor] = newElement;
+        if(TypedLettersCursor > 0){
+          currentElement = prevLetters[TypedLettersCursor-1]
+          console.log(currentElement)
+          var removedCursorClass = currentElement.props.className.replace('typing-cursor', '')
+          newElement = React.cloneElement(currentElement, {className: removedCursorClass})
+          prevLetters[TypedLettersCursor-1] = newElement;
+        }
         return prevLetters;
       })
 

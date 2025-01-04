@@ -16,7 +16,7 @@ export default function Results({ElapsedTime, TypedCharacters, parentFunction}: 
   const ElapsedTimeInMinutes = ElapsedTime/60_000
   const GrossWPM = (TypedCharacters.length/5)/ElapsedTimeInMinutes;
   const incorrectLetterCount = TypedCharacters.filter(letter =>
-    letter.props.className === 'incorrect'
+    letter.props.className.includes('incorrect')
   ).length;
   const NetWPM = (GrossWPM) - (incorrectLetterCount/ElapsedTimeInMinutes)
   return (
