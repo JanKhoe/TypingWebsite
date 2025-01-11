@@ -6,10 +6,11 @@ import { FaChevronCircleRight, FaSync } from "react-icons/fa";
 interface ResultsProps{
   ElapsedTime: number,
   TypedCharacters: React.ReactElement[],
-  parentFunction: () => void;
+  RestartFunction: () => void;
+  NextFunction: () => void;
 }
 
-export default function Results({ElapsedTime, TypedCharacters, parentFunction}: ResultsProps){
+export default function Results({ElapsedTime, TypedCharacters, RestartFunction, NextFunction}: ResultsProps){
 
 
   const ElapsedTimeinSeconds = ElapsedTime/1_000
@@ -46,10 +47,10 @@ export default function Results({ElapsedTime, TypedCharacters, parentFunction}: 
             </div>
           </div>
           <div className="p4 flex items-center justify-center space-x-8">
-            <button className="sync-button" onClick={parentFunction}>
+            <button className="sync-button" onClick={RestartFunction}>
               <FaSync className="sync-icon"/>
             </button>
-            <button className="next-button">
+            <button className="next-button" onClick={NextFunction}>
               <FaChevronCircleRight className="next-icon"/>
             </button>
           </div>

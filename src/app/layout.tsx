@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Ubuntu } from 'next/font/google'
 import { FaTools } from "react-icons/fa";
+import Option from "./components/option";
+import { LayoutProvider } from "./layoutContext";
 
 // Initialize the font
 const ubuntu = Ubuntu({
@@ -21,8 +23,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
+
+
   return (
     <html lang="en">
+    <LayoutProvider>
       <body
         className={`${ubuntu.className} antialiased`}
       >
@@ -30,7 +37,16 @@ export default function RootLayout({
         <div className="flex justify-between items-center">
           <div className="w-40 h-10 bg-gray-800 rounded flex items-center justify-center text-center">Type Typing</div>
           <nav className="flex gap-8">
-            <FaTools className="text-2xl cursor-pointer" title="In Development" />
+
+            <div className="mode-selector">
+              <div className="mode-header">RANDOM</div>
+              <div className="mode-options">
+                <Option Mode={1} Params={[10]} innerText={'10'} ></Option>
+                <Option Mode={1} Params={[20]} innerText={'20'} ></Option>
+                <Option Mode={1} Params={[50]} innerText={'50'} ></Option>
+              </div>
+            </div>
+
             <FaTools className="text-2xl cursor-pointer" title="In Development"/>
             <FaTools className="text-2xl cursor-pointer" title="In Development"/>
             <FaTools className="text-2xl cursor-pointer" title="In Development"/>
@@ -41,6 +57,7 @@ export default function RootLayout({
       </header>
         {children}
       </body>
+      </LayoutProvider>
     </html>
   );
 }

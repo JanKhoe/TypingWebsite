@@ -166,3 +166,67 @@ body {
 }
 
 /* END Cursor Styling */
+
+
+/* START dropdown mode selector Styling */
+
+.mode-selector {
+  position: relative;
+  font-family: system-ui, -apple-system, sans-serif;
+  width: fit-content;
+  user-select: none;
+  text-align: center;
+}
+
+.mode-header {
+  background-color: #1a1f2e;
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.mode-options {
+  z-index: 1;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #1a1f2e;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.2s ease-in-out;
+  border-radius:0 0px 10px 10px;
+}
+
+/* Show dropdown on header hover */
+.mode-selector:hover .mode-options,
+/* Keep dropdown visible when hovering the options */
+.mode-options:hover {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.mode-option {
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.15s ease;
+}
+
+.mode-option:last-child {
+  border-bottom: none;
+  border-radius:0 0px 10px 10px;
+}
+
+.mode-option:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #4f9eed;
+}
+/* END dropdown mode selector Styling */
