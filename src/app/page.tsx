@@ -15,7 +15,7 @@ export default function Home() {
   }
   const [restartFlag, setRestartFlag] = useState(0)
   return (
-      <div className="grid grid-rows-[20px_1fr_20px] justify-items-center p-4" key={restartFlag}>
+      <div className="grid grid-rows-[20px_1fr_20px] justify-items-center p-8" key={restartFlag}>
             <TypingHandler parentfunction={toggleRestartFlag}/>
         <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         </footer>

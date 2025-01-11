@@ -33,6 +33,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
   const tabRef = useRef<HTMLDivElement>(null);
 
   let result: String[];
+  const MAXCHAR = 50
 
 
   const fetchData = async () => {
@@ -105,9 +106,9 @@ export default ({parentfunction} : TypingHandlerProps) => {
     const lettersArray: React.ReactElement[] = [];
     letters.current.forEach((val) => {
       val.forEach((val2) => {
-        lettersArray.push(<Letter letter={val2} key={keyIndex.current++} className="untyped text-xl"> </Letter>);
+        lettersArray.push(<Letter letter={val2} key={keyIndex.current++} className="untyped text-3xl "> </Letter>);
       });
-      lettersArray.push(<Letter letter="&nbsp;" key={keyIndex.current++} className="untyped text-xl"> </Letter>);
+      lettersArray.push(<Letter letter="&nbsp;" key={keyIndex.current++} className="untyped text-3xl tracking-widest"> </Letter>);
 
     });
     lettersArray.pop(); // Remove last space if necessary
@@ -150,12 +151,10 @@ export default ({parentfunction} : TypingHandlerProps) => {
     if(isCorrect){
       setUnTypedLetters((prevLetters) => {
         var currentElement = prevLetters[TypedLettersCursor]
-        var newElement = React.cloneElement(currentElement, {className: "correct text-xl typing-cursor"})
+        var newElement = React.cloneElement(currentElement, {className: "correct text-3xl typing-cursor"})
         prevLetters[TypedLettersCursor] = newElement;
-
         if(TypedLettersCursor > 0){
           currentElement = prevLetters[TypedLettersCursor-1]
-
           var removedCursorClass = currentElement.props.className.replace('typing-cursor', '')
           newElement = React.cloneElement(currentElement, {className: removedCursorClass})
           prevLetters[TypedLettersCursor-1] = newElement;
@@ -167,7 +166,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
     else{
       setUnTypedLetters((prevLetters) => {
         var currentElement = prevLetters[TypedLettersCursor]
-        var newElement = React.cloneElement(currentElement, {className: "incorrect text-xl typing-cursor"})
+        var newElement = React.cloneElement(currentElement, {className: "incorrect text-3xl typing-cursor "})
         prevLetters[TypedLettersCursor] = newElement;
         if(TypedLettersCursor > 0){
           currentElement = prevLetters[TypedLettersCursor-1]
@@ -185,8 +184,12 @@ export default ({parentfunction} : TypingHandlerProps) => {
   const HandleBackSpace = () => {
     setUnTypedLetters((prevLetters) => {
       var currentElement = prevLetters[TypedLettersCursor-1]
-      var newElement = React.cloneElement(currentElement, {className: "untyped text-xl"})
+      var newElement = React.cloneElement(currentElement, {className: "untyped text-3xl"})
       prevLetters[TypedLettersCursor-1] = newElement;
+      currentElement = prevLetters[TypedLettersCursor-2]
+      var updatedClass = currentElement.props.className + ' typing-cursor';
+      newElement = React.cloneElement(currentElement, {className: updatedClass})
+      prevLetters[TypedLettersCursor-2] = newElement;
       return prevLetters;
     })
   }
