@@ -42,7 +42,6 @@ body {
 .container:not(:focus-within) .start-prompt {
   filter: blur(4px);
   -webkit-filter: blur(4px);
-
 }
 
 .ParagraphWrapper:focus{
@@ -241,8 +240,6 @@ body {
 /* START floating start prompt */
 
 .start-prompt {
-
-
   /* transform: translateX(-50%); */
   color: white;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
@@ -250,6 +247,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: -5;
 }
 
 @keyframes float {

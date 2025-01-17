@@ -145,7 +145,10 @@ export default ({parentfunction} : TypingHandlerProps) => {
   useEffect(() => {
     console.log('here2')
     setUnTypedLetters(JSXLetter);
-
+    if (tabRef.current) {
+      console.log('from here2')
+      tabRef.current.focus();
+    }
   }, [JSXLetter])
 
 
@@ -157,10 +160,17 @@ export default ({parentfunction} : TypingHandlerProps) => {
     if (tabRef.current) {
       tabRef.current.focus();
     }
+      setTimeout(() => {
+        const paragraphWrapper = document.querySelector('.ParagraphWrapper') as HTMLDivElement | null;
+        if(paragraphWrapper){
+          paragraphWrapper.focus();
+        }
+      }, 700);
   }, [tabRef.current]);
 
 
   useEffect(() => {
+    console.log('here3')
     // If unTypedLetters is empty, call the parent function
     if (unTypedLetters.length === TypedLettersCursor && keyIndex.current > 0) {
       console.log('done typing')
@@ -278,39 +288,34 @@ export default ({parentfunction} : TypingHandlerProps) => {
       {
         !isDoneTyping ? (
           WordContainerss && WordContainerss.length > 1 ? (
-
             <div className="container">
-
-              <div className="mx-auto w-1/2">
+              <div className="mx-auto w-1/2" >
+                <div
+                  className={`start-prompt ${
+                    isTypingStarted.current  ? "invisible" : ""
+                  }`}
+                >
+                  <p>
+                  Type to start!
+                  </p>
+                  <HiChevronDown className="down-arrow" />
+                </div>
+              </div>
               <div
-                className={`start-prompt ${
-                  isTypingStarted.current  ? "invisible" : ""
-                }`}
+                tabIndex={0}
+                ref={tabRef}
+                className="ParagraphWrapper flex items-start justify-center max-h-96 min-h-72 min-w-[36em] max-w-md overflow-hidden bg-gray-900 p-4 rounded-lg"
+                autoFocus={true}
+                onKeyDown={handleKeyPresses}
               >
-                <p>
-                Type to start!
-                </p>
-                <HiChevronDown className="down-arrow" />
+                  {/* <div>
+                  <h2>Current Mode: {mode}</h2>
+                  <h3>Current Params: {params.join(", ")}</h3>
+                </div> */}
+                <div className="flex justify-start flex-wrap">
+                  {WordContainerss}
+                </div>
               </div>
-            </div>
-
-
-
-            <div
-              tabIndex={0}
-              ref={tabRef}
-              className="ParagraphWrapper flex items-start justify-center max-h-96 min-h-72 min-w-[36em] max-w-md overflow-hidden bg-gray-900 p-4 rounded-lg"
-              autoFocus={true}
-              onKeyDown={handleKeyPresses}
-            >
-                {/* <div>
-                <h2>Current Mode: {mode}</h2>
-                <h3>Current Params: {params.join(", ")}</h3>
-              </div> */}
-              <div className="flex justify-start flex-wrap">
-                {WordContainerss}
-              </div>
-            </div>
             </div>
           ) : (
             <div
