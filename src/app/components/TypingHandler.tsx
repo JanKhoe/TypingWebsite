@@ -1,9 +1,25 @@
 "use client";
 
+import { HiChevronDown } from "react-icons/hi";
 import Letter from './Letter';
 import Results from "./Results";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLayoutContext } from '../layoutContext';
+import { PrismaClient } from '@prisma/client';
+
+// const prisma = new PrismaClient();
+
+// async function main(){
+
+// }
+
+// main()
+//   .catch(e =>{
+//     console.error(e.message)
+//   })
+//   .finally(async () => {
+//     await prisma.$disconnect()
+//   })
 
 
 interface TypingHandlerProps{
@@ -13,6 +29,7 @@ interface TypingHandlerProps{
 }
 
 export default ({parentfunction} : TypingHandlerProps) => {
+
 
   const { mode, setMode, params, setParams } = useLayoutContext();
 
@@ -38,12 +55,21 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
   const fetchData = async () => {
     try {
-      var response = await fetch('https://random-word-api.herokuapp.com/word?number=' + params[0]);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+
+      console.log(mode)
+      if(mode == 1){
+        var response = await fetch('https://random-word-api.herokuapp.com/word?number=' + params[0]);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        result = await response.json();
+        setRandomWords(result)
       }
-      result = await response.json();
-      setRandomWords(result)
+      else if(mode == 2){
+        console.log('pulling paragraph')
+        setRandomWords(`There's no such thing as a painless lesson, they just don't exist. Sacrifices are necessary; you can't gain anything without losing something first. Although, if you can endure that pain, and walk away from it you'll find that you now have a heart strong enough to overcome any obstacle. Yeah, a heart made fullmetal.`.split(" "))
+        result = phrase.split(" ")
+      }
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
     } finally {
@@ -60,6 +86,8 @@ export default ({parentfunction} : TypingHandlerProps) => {
       console.log('focused')
       tabRef.current.focus();
     }
+    setIsDoneTyping(false)
+    isTypingStarted.current = false
   }, [mode, params]);
 
 
@@ -87,7 +115,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
 
 
-
   useEffect(() => {
     setPhrase(randomWords.join(' '))
     setWords(randomWords)
@@ -106,9 +133,9 @@ export default ({parentfunction} : TypingHandlerProps) => {
     const lettersArray: React.ReactElement[] = [];
     letters.current.forEach((val) => {
       val.forEach((val2) => {
-        lettersArray.push(<Letter letter={val2} key={keyIndex.current++} className="untyped text-3xl "> </Letter>);
+        lettersArray.push(<Letter letter={val2} key={keyIndex.current++} className="untyped text-xl "> </Letter>);
       });
-      lettersArray.push(<Letter letter="&nbsp;" key={keyIndex.current++} className="untyped text-3xl tracking-widest"> </Letter>);
+      lettersArray.push(<Letter letter="&nbsp;" key={keyIndex.current++} className="untyped text-xl"> </Letter>);
 
     });
     lettersArray.pop(); // Remove last space if necessary
@@ -151,7 +178,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
     if(isCorrect){
       setUnTypedLetters((prevLetters) => {
         var currentElement = prevLetters[TypedLettersCursor]
-        var newElement = React.cloneElement(currentElement, {className: "correct text-3xl typing-cursor"})
+        var newElement = React.cloneElement(currentElement, {className: "correct text-xl typing-cursor"})
         prevLetters[TypedLettersCursor] = newElement;
         if(TypedLettersCursor > 0){
           currentElement = prevLetters[TypedLettersCursor-1]
@@ -166,7 +193,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
     else{
       setUnTypedLetters((prevLetters) => {
         var currentElement = prevLetters[TypedLettersCursor]
-        var newElement = React.cloneElement(currentElement, {className: "incorrect text-3xl typing-cursor "})
+        var newElement = React.cloneElement(currentElement, {className: "incorrect text-xl typing-cursor "})
         prevLetters[TypedLettersCursor] = newElement;
         if(TypedLettersCursor > 0){
           currentElement = prevLetters[TypedLettersCursor-1]
@@ -184,7 +211,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
   const HandleBackSpace = () => {
     setUnTypedLetters((prevLetters) => {
       var currentElement = prevLetters[TypedLettersCursor-1]
-      var newElement = React.cloneElement(currentElement, {className: "untyped text-3xl"})
+      var newElement = React.cloneElement(currentElement, {className: "untyped text-xl"})
       prevLetters[TypedLettersCursor-1] = newElement;
       currentElement = prevLetters[TypedLettersCursor-2]
       var updatedClass = currentElement.props.className + ' typing-cursor';
@@ -251,6 +278,24 @@ export default ({parentfunction} : TypingHandlerProps) => {
       {
         !isDoneTyping ? (
           WordContainerss && WordContainerss.length > 1 ? (
+
+            <>
+
+              <div className="mx-auto w-1/2">
+              <div
+                className={`start-prompt ${
+                  isTypingStarted.current ? "invisible" : ""
+                }`}
+              >
+                <p>
+                Type to start!
+                </p>
+                <HiChevronDown className="down-arrow" />
+              </div>
+            </div>
+
+
+
             <div
               tabIndex={0}
               ref={tabRef}
@@ -266,6 +311,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
                 {WordContainerss}
               </div>
             </div>
+            </>
           ) : (
             <div
               tabIndex={0}
