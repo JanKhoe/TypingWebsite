@@ -29,8 +29,20 @@ body {
 
 
 .ParagraphWrapper:not(:focus) {
-  filter: blur(4px);  /* Apply blur effect when the input is not focused */
+  filter: blur(4px);
   -webkit-filter: blur(4px);
+}
+
+
+.container:focus-within .start-prompt {
+  filter: none;
+  -webkit-filter: none;
+}
+
+.container:not(:focus-within) .start-prompt {
+  filter: blur(4px);
+  -webkit-filter: blur(4px);
+
 }
 
 .ParagraphWrapper:focus{

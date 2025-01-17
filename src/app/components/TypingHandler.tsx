@@ -279,12 +279,12 @@ export default ({parentfunction} : TypingHandlerProps) => {
         !isDoneTyping ? (
           WordContainerss && WordContainerss.length > 1 ? (
 
-            <>
+            <div className="container">
 
               <div className="mx-auto w-1/2">
               <div
                 className={`start-prompt ${
-                  isTypingStarted.current ? "invisible" : ""
+                  isTypingStarted.current  ? "invisible" : ""
                 }`}
               >
                 <p>
@@ -311,7 +311,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
                 {WordContainerss}
               </div>
             </div>
-            </>
+            </div>
           ) : (
             <div
               tabIndex={0}
