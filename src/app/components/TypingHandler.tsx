@@ -1,6 +1,7 @@
 "use client";
 
 import { HiChevronDown } from "react-icons/hi";
+import { FaSync } from "react-icons/fa";
 import Letter from './Letter';
 import Results from "./Results";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -88,6 +89,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
     }
     setIsDoneTyping(false)
     isTypingStarted.current = false
+    setTypedlettersCursor(0)
   }, [mode, params]);
 
 
@@ -165,7 +167,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
         if(paragraphWrapper){
           paragraphWrapper.focus();
         }
-      }, 700);
+      }, 1000);
   }, [tabRef.current]);
 
 
@@ -223,10 +225,12 @@ export default ({parentfunction} : TypingHandlerProps) => {
       var currentElement = prevLetters[TypedLettersCursor-1]
       var newElement = React.cloneElement(currentElement, {className: "untyped text-xl"})
       prevLetters[TypedLettersCursor-1] = newElement;
-      currentElement = prevLetters[TypedLettersCursor-2]
-      var updatedClass = currentElement.props.className + ' typing-cursor';
-      newElement = React.cloneElement(currentElement, {className: updatedClass})
-      prevLetters[TypedLettersCursor-2] = newElement;
+      if(TypedLettersCursor-2 > 0){
+        currentElement = prevLetters[TypedLettersCursor-2]
+        var updatedClass = currentElement.props.className + ' typing-cursor';
+        newElement = React.cloneElement(currentElement, {className: updatedClass})
+        prevLetters[TypedLettersCursor-2] = newElement;
+      }
       return prevLetters;
     })
   }
@@ -308,10 +312,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
                 autoFocus={true}
                 onKeyDown={handleKeyPresses}
               >
-                  {/* <div>
-                  <h2>Current Mode: {mode}</h2>
-                  <h3>Current Params: {params.join(", ")}</h3>
-                </div> */}
                 <div className="flex justify-start flex-wrap">
                   {WordContainerss}
                 </div>
@@ -339,6 +339,13 @@ export default ({parentfunction} : TypingHandlerProps) => {
           />
         )
       }
+      {!isDoneTyping && (
+        <div className="p4 flex items-center justify-center space-x-8">
+        <button className="sync-button" onClick={restartSamePhrase}>
+          <FaSync className="sync-icon"/>
+        </button>
+      </div>
+      )}
       </div>
     </div>
   )
