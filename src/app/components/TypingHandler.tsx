@@ -6,7 +6,7 @@ import Letter from './Letter';
 import Results from "./Results";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLayoutContext } from '../layoutContext';
-import { PrismaClient } from '@prisma/client';
+
 
 // const prisma = new PrismaClient();
 
@@ -50,7 +50,8 @@ export default ({parentfunction} : TypingHandlerProps) => {
   const timeEnd = useRef<number>(0);
   const tabRef = useRef<HTMLDivElement>(null);
 
-  let result: String[];
+  let result;
+
   const MAXCHAR = 50
 
 
@@ -68,8 +69,13 @@ export default ({parentfunction} : TypingHandlerProps) => {
       }
       else if(mode == 2){
         console.log('pulling paragraph')
-        setRandomWords(`There's no such thing as a painless lesson, they just don't exist. Sacrifices are necessary; you can't gain anything without losing something first. Although, if you can endure that pain, and walk away from it you'll find that you now have a heart strong enough to overcome any obstacle. Yeah, a heart made fullmetal.`.split(" "))
-        result = phrase.split(" ")
+        var response = await fetch('/api/paragraphs')
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        result = await response.json();
+        console.log(result)
+        setRandomWords(result.content.split(" "))
       }
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);

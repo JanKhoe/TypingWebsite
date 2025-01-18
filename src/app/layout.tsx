@@ -50,7 +50,7 @@ export default function RootLayout({
             <div className="mode-selector">
               <div className="mode-header">PARAGRAPH</div>
               <div className="mode-options">
-                <Option Mode={2} Params={[1]} innerText={'DEMO'} ></Option>
+                <Option Mode={2} Params={[1]} innerText={'RANDOM'} ></Option>
               </div>
             </div>
 

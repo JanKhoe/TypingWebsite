@@ -10,6 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users{
+model paragraphs{
   id String @id @default(cuid())
+  content String
 }
