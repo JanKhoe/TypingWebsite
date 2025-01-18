@@ -75,7 +75,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
         }
         result = await response.json();
         console.log(result)
-        setRandomWords(result.content.split(" "))
+        setRandomWords(result[0].content.split(" "))
       }
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
