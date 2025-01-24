@@ -27,7 +27,7 @@ export const useLayoutContext = () => {
 // Context provider component
 export const LayoutProvider = ({ children }: { children: ReactNode }) => {
   const [mode, setMode] = useState(1);
-  const [params, setParams] = useState<(number | string)[]>([10]);
+  const [params, setParams] = useState<(number | string)[]>([50]);
 
   return (
     <LayoutContext.Provider value={{ mode, setMode, params, setParams }}>

@@ -5,6 +5,8 @@ import { Ubuntu } from 'next/font/google'
 import { FaTools } from "react-icons/fa";
 import Option from "./components/option";
 import { LayoutProvider } from "./layoutContext";
+import RedirectDiv  from './components/redirectDiv';
+
 
 // Initialize the font
 const ubuntu = Ubuntu({
@@ -54,7 +56,10 @@ export default function RootLayout({
               </div>
             </div>
 
-            <FaTools className="text-2xl cursor-pointer" title="In Development"/>
+            <div className="mode-selector">
+              <RedirectDiv innerText="CUSTOM" link="/options" className="mode-header"></RedirectDiv>
+            </div>
+
             <FaTools className="text-2xl cursor-pointer" title="In Development"/>
             <FaTools className="text-2xl cursor-pointer" title="In Development"/>
           </nav>

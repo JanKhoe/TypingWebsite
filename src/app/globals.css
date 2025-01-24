@@ -148,26 +148,37 @@ body {
   position: relative;
 }
 
+.newline-cursor{
+  position: relative;
+}
+
+.newline-cursor::before{
+  content: '';
+  position: absolute;
+  top: 3px;
+  width: 0.5px;
+  height: 22px;
+  background-color: white;  
+  animation: blink 1.06s steps(2, start) infinite;
+}
+
 /* Create the cursor using ::after pseudo-element */
 .typing-cursor::after {
   content: '';
   position: absolute;
   top: 3px;
-  width: 0.5px;  /* Standard cursor width */
-  height: 1em;  /* Match the line height of the text */
-  background-color: white;  /* Match the text color */
+  width: 0.5px;
+  height: 22px;
+  background-color: white;  
   animation: blink 1.06s steps(2, start) infinite;
-  /* The steps(2) makes it a sharp blink rather than a fade */
 }
 
-/* Define the blink animation */
 @keyframes blink {
   to {
     visibility: hidden;
   }
 }
 
-/* Optional: If you want to prevent text selection */
 .typing-cursor {
   user-select: none;
 }
@@ -266,5 +277,163 @@ body {
   }
 }
 
-
 /* END floating start prompt */
+
+/* START custom-options */
+
+.settings-container {
+  background-color: #1a1f2e;
+  border-radius: 8px;
+  padding: 24px;
+  width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 350px;
+  margin-top: 24px;
+}
+
+.top-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.custom-words {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: white;
+  padding: 12px;
+  font-family: inherit;
+  resize: none;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.custom-words::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.checkbox-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: white;
+}
+
+.toggle input {
+  display: none;
+}
+
+.toggle-slider {
+  position: relative;
+  width: 40px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  margin-right: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: white;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+}
+
+.toggle input:checked + .toggle-slider {
+  background-color: #4f9eed;
+}
+
+.toggle input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+}
+
+.toggle-label {
+  font-size: 14px;
+}
+
+.bottom-controls {
+  margin-top: auto;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.length-field {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: white;
+  padding: 8px 12px;
+  width: 200px;
+}
+
+.length-field::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.start-button {
+  background-color: #4f9eed;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 24px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.start-button:hover {
+  background-color: #3d7dbd;
+}
+
+/* END custom-options */
+
+/* START Custom Scroll Bar */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+/* END Custom Scroll Bar */
