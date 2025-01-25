@@ -10,6 +10,8 @@ type LayoutContextType = {
   setMode: (mode: number) => void;
   params: (number|string)[];
   setParams: (params: (number|string)[]) => void;
+  refreshflag: number;
+  setFlag: (refreshflag: number) => void
 };
 
 // Create the context with a default value (undefined ensures it must be used within a provider)
@@ -28,9 +30,10 @@ export const useLayoutContext = () => {
 export const LayoutProvider = ({ children }: { children: ReactNode }) => {
   const [mode, setMode] = useState(1);
   const [params, setParams] = useState<(number | string)[]>([50]);
+  const [refreshflag, setFlag] = useState(0);
 
   return (
-    <LayoutContext.Provider value={{ mode, setMode, params, setParams }}>
+    <LayoutContext.Provider value={{ mode, setMode, params, setParams, refreshflag, setFlag }}>
       {children}
     </LayoutContext.Provider>
   );

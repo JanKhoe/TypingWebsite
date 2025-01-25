@@ -33,7 +33,7 @@ interface TypingHandlerProps{
 export default ({parentfunction} : TypingHandlerProps) => {
 
 
-  const { mode, setMode, params, setParams } = useLayoutContext();
+  const { mode, setMode, params, setParams, refreshflag, setFlag } = useLayoutContext();
 
   const [TypedLettersCursor, setTypedlettersCursor] = useState(0);
   const [unTypedLetters, setUnTypedLetters] = useState<React.ReactElement[]>([(<React.Fragment key={1}></React.Fragment>)]);
@@ -48,6 +48,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
   const keyIndex = useRef(0);
   const charOnCurLine = useRef(0);
   const WordContainerssCursor = useRef(0);
+  const UserCurWord = useRef(0);
   let triggerNewLine = useRef(false)
   const TriggerPrevLine = useRef(false)
   const isTypingStarted = useRef<boolean>(false);
@@ -103,11 +104,13 @@ export default ({parentfunction} : TypingHandlerProps) => {
     setIsDoneTyping(false)
     isTypingStarted.current = false
     setTypedlettersCursor(0)
+    UserCurWord.current = 0;
     triggerNewLine.current = false
     TriggerPrevLine.current = false
     WordContainerssCursor.current = 0
     charOnCurLine.current = 0;
-  }, [mode, params]);
+    CharsPerLine.current = []
+  }, [refreshflag]);
 
 
 
@@ -117,11 +120,13 @@ export default ({parentfunction} : TypingHandlerProps) => {
     setPhrase(phrase + ' ')
     setWords(randomWords)
     setUnTypedLetters([(<React.Fragment key={1}></React.Fragment>)])
+    CharsPerLine.current = []
     setTypedlettersCursor(0)
     triggerNewLine.current = false
     TriggerPrevLine.current = false
     WordContainerssCursor.current = 0
     charOnCurLine.current = 0;
+    UserCurWord.current = 0;
     setIsDoneTyping(false)
     isTypingStarted.current = false
     keyIndex.current = 0;
@@ -163,6 +168,11 @@ export default ({parentfunction} : TypingHandlerProps) => {
     });
     lettersArray.pop(); // Remove last space if necessary
     console.log(lettersArray)
+    if(lettersArray.length > 0){
+      var currentElement = lettersArray[0]
+      var newElement = React.cloneElement(currentElement, {className: `untyped newline-cursor text-2xl`})
+      lettersArray[0] = newElement;
+    }
     return lettersArray;
   }, [phrase]);
 
@@ -216,6 +226,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
       console.log('space char was filled')
       WordContainerssCursor.current += 2;
       charOnCurLine.current += WordContainerss[WordContainerssCursor.current].props.letterCount
+      UserCurWord.current += 1;
       if(charOnCurLine.current > MAXCHAR){
         console.log('newline imminent')
         CharsPerLine.current.push(charOnCurLine.current -= WordContainerss[WordContainerssCursor.current].props.letterCount)
@@ -252,7 +263,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
       console.log('space char was deleted')
       charOnCurLine.current -= WordContainerss[WordContainerssCursor.current].props.letterCount
       WordContainerssCursor.current -= 2;
-
+      UserCurWord.current -= 1;
       if(charOnCurLine.current <= 0){
         console.log('wentback one line')
         charOnCurLine.current = CharsPerLine.current.pop() ?? 0;
@@ -390,20 +401,26 @@ export default ({parentfunction} : TypingHandlerProps) => {
               <div
                 tabIndex={0}
                 ref={tabRef}
-                className="ParagraphWrapper flex items-start justify-center max-h-[13em]  min-h-[13em]  min-w-[42em] max-w-md overflow-hidden bg-gray-900 p-4 rounded-lg"
+                className="ParagraphWrapper flex items-start justify-center max-h-[13em]  min-h-[13em]  min-w-[42em] max-w-md bg-gray-900 p-4 rounded-lg"
                 autoFocus={true}
                 onKeyDown={handleKeyPresses}
               >
-                <div id="clip-container" className="w-full max-h-[11em] overflow-hidden">
-                  <div id="all-words" className="flex justify-start flex-wrap relative box-content max-h-full overflow-hidden">
-                    {WordContainerss.map((elem: React.ReactElement) =>(
-                      <React.Fragment key={keyIndex.current++}>
-                        {/* {charRenderCursor}
-                        {!isNaN(parseInt(elem.props.letterCount, 10)) ? parseInt(elem.props.letterCount, 10) : 0} */}
-                        {(charRenderCursor += !isNaN(parseInt(elem.props.letterCount, 10)) ? parseInt(elem.props.letterCount, 10) : 0) > MAXCHAR && <div style={{ flexBasis: '100%', height: '0' }} data-ignore={charRenderCursor -= (charRenderCursor - parseInt(elem.props.letterCount, 10)) } > </div>}
-                        {elem}
-                      </React.Fragment>
-                    ))}
+
+                <div id="progress-wrapper" className="relative">
+                <div className="progress-tracker">
+                    {UserCurWord.current}/{WordContainerss.length/2 + 0.5}
+                  </div>
+                  <div id="clip-container" className="w-full max-h-[11em] overflow-hidden">
+                    <div id="all-words" className="flex justify-start flex-wrap relative box-content max-h-full overflow-hidden">
+                      {WordContainerss.map((elem: React.ReactElement) =>(
+                        <React.Fragment key={keyIndex.current++}>
+                          {/* {charRenderCursor}
+                          {!isNaN(parseInt(elem.props.letterCount, 10)) ? parseInt(elem.props.letterCount, 10) : 0} */}
+                          {(charRenderCursor += !isNaN(parseInt(elem.props.letterCount, 10)) ? parseInt(elem.props.letterCount, 10) : 0) > MAXCHAR && <div style={{ flexBasis: '100%', height: '0' }} data-ignore={charRenderCursor -= (charRenderCursor - parseInt(elem.props.letterCount, 10)) } > </div>}
+                          {elem}
+                        </React.Fragment>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -442,4 +459,3 @@ export default ({parentfunction} : TypingHandlerProps) => {
   )
 
 };
-
