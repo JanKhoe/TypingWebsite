@@ -103,6 +103,10 @@ export default ({parentfunction} : TypingHandlerProps) => {
     setIsDoneTyping(false)
     isTypingStarted.current = false
     setTypedlettersCursor(0)
+    triggerNewLine.current = false
+    TriggerPrevLine.current = false
+    WordContainerssCursor.current = 0
+    charOnCurLine.current = 0;
   }, [mode, params]);
 
 
@@ -114,6 +118,10 @@ export default ({parentfunction} : TypingHandlerProps) => {
     setWords(randomWords)
     setUnTypedLetters([(<React.Fragment key={1}></React.Fragment>)])
     setTypedlettersCursor(0)
+    triggerNewLine.current = false
+    TriggerPrevLine.current = false
+    WordContainerssCursor.current = 0
+    charOnCurLine.current = 0;
     setIsDoneTyping(false)
     isTypingStarted.current = false
     keyIndex.current = 0;
@@ -434,3 +442,4 @@ export default ({parentfunction} : TypingHandlerProps) => {
   )
 
 };
+
