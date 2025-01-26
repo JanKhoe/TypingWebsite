@@ -9,21 +9,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLayoutContext } from '../layoutContext';
 
 
-// const prisma = new PrismaClient();
-
-// async function main(){
-
-// }
-
-// main()
-//   .catch(e =>{
-//     console.error(e.message)
-//   })
-//   .finally(async () => {
-//     await prisma.$disconnect()
-//   })
-
-
 interface TypingHandlerProps{
   parentfunction: () => void;
   // next: React.ReactElement;
