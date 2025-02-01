@@ -456,7 +456,10 @@ body {
 
 #clip-container {
   position: relative; /* Ensure the progress tracker is positioned relative to this container */
-  
+  min-width: 640px;
 }
 
 /*END PROGRESS TRACKER */
+
+
+

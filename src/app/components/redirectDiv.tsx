@@ -3,13 +3,14 @@
 
 interface RedirectDivProps{
   link: string
-  className: string
-  innerText: string
+  className?: string
+  innerText?: string
+  children?: React.ReactNode;
 }
 
 
 
-export default function RedirectDiv({link, className, innerText}: RedirectDivProps){
+export default function RedirectDiv({link, className, innerText, children}: RedirectDivProps){
 
   const handleClick = () => {
     window.location.href = link;
@@ -17,7 +18,10 @@ export default function RedirectDiv({link, className, innerText}: RedirectDivPro
 
 
   return (<>
-            <div className={className} onClick={handleClick}>{innerText}</div>
+            <div className={className} onClick={handleClick}>{innerText}
+
+              {children}
+            </div>
           </>
           )
 }

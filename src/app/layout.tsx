@@ -43,16 +43,16 @@ export default function RootLayout({
             <div className="mode-selector">
               <div className="mode-header">RANDOM</div>
               <div className="mode-options">
-                <Option Mode={1} Params={[10]} innerText={'10'} ></Option>
-                <Option Mode={1} Params={[20]} innerText={'20'} ></Option>
-                <Option Mode={1} Params={[50]} innerText={'50'} ></Option>
+                <Option Mode={1} Params={[10]} innerText={'10'} className="mode-option"></Option>
+                <Option Mode={1} Params={[20]} innerText={'20'} className="mode-option"></Option>
+                <Option Mode={1} Params={[50]} innerText={'50'} className="mode-option"></Option>
               </div>
             </div>
 
             <div className="mode-selector">
               <div className="mode-header">PARAGRAPH</div>
               <div className="mode-options">
-                <Option Mode={2} Params={[1]} innerText={'RANDOM'} ></Option>
+                <Option Mode={2} Params={[1]} innerText={'RANDOM'} className="mode-option" ></Option>
               </div>
             </div>
 

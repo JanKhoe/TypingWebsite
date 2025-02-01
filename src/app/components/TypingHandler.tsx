@@ -2,11 +2,13 @@
 
 import { HiChevronDown } from "react-icons/hi";
 import { FaSync } from "react-icons/fa";
+import {FaChevronCircleRight} from "react-icons/fa"
 import Letter from './Letter';
 import WordTest from './Word';
 import Results from "./Results";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLayoutContext } from '../layoutContext';
+import { cookies } from "next/headers";
 
 
 interface TypingHandlerProps{
@@ -27,9 +29,11 @@ export default ({parentfunction} : TypingHandlerProps) => {
   const [randomWords, setRandomWords] = useState<String[]>([]);
   const [phrase, setPhrase] = useState<String>('')
   const [words, setWords] = useState<String[]>([])
+  const [cookiesLoaded, setCookiesLoaded] = useState(false);
 
   const letters = useRef<String[][]>([] )
   const CharsPerLine = useRef<number[]>([])
+  const pastRecentRandomChars = useRef<number[]>([])
   const keyIndex = useRef(0);
   const charOnCurLine = useRef(0);
   const WordContainerssCursor = useRef(0);
@@ -43,21 +47,43 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
 
   let result;
-  const MAXCHAR = 54
+  const MAXCHAR = 52
 
+  function getCookie(name: String) {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      cookie = cookie.trim(); // Remove whitespace
+      if (cookie.startsWith(name + '=')) {
+        return decodeURIComponent(cookie.substring(name.length + 1));
+      }
+    }
+    return null; // Cookie not found
+  }
+
+  const abortControllers: AbortController[] = [];
+
+  const controller = new AbortController();
+  abortControllers.push(controller);
+
+  function cancelAllRequests() {
+    abortControllers.forEach((controller) => controller.abort());
+    abortControllers.length = 0; // Clear the array
+  }
 
 
   const fetchData = async () => {
     try {
-
       console.log(mode)
       if(mode == 1){
-        var response = await fetch('https://random-word-api.herokuapp.com/word?number=' + params[0]);
+        var response = await fetch('https://random-word-api.herokuapp.com/word?number=' + params[0], { signal:controller.signal  } );
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         result = await response.json();
-        setRandomWords(result)
+        if(mode==1){
+          setRandomWords(result)
+        }
+
       }
       else if(mode == 2){
         console.log('pulling paragraph')
@@ -67,18 +93,67 @@ export default ({parentfunction} : TypingHandlerProps) => {
         }
         result = await response.json();
         console.log(result)
-        console.log(Math.floor(Math.random() * result.length))
-        setRandomWords(result[Math.floor(Math.random() * result.length)].content.split(" "))
+        var randomNum;
+        do{
+          console.log('is this even repeating? this should btw')
+          randomNum = Math.floor(Math.random() * result.length);
+          console.log(randomNum);
+          console.log(randomNum in pastRecentRandomChars.current)
+          console.log(pastRecentRandomChars.current)
+        }while(pastRecentRandomChars.current.includes(randomNum))
+        if(pastRecentRandomChars.current.length >= 3){
+          pastRecentRandomChars.current.shift()
+          pastRecentRandomChars.current.push(randomNum)
+        }
+        else{
+          pastRecentRandomChars.current.push(randomNum)
+        }
+        setRandomWords(result[randomNum].content.split(" "))
       }
+
+    if(mode == 3){
+      console.log(params[1])
+      var customPhrase: String[] = []
+      var randomWords: String[] = [];
+
+      if(typeof(params[1]) == 'string'){
+        randomWords = params[1].replace(/  +/g, ' ').trim().split(' ')
+      }
+      console.log(randomWords)
+      for(let i = 0; i < Number(params[0]); i++){
+        randomNum = Math.floor(Math.random() * randomWords.length);
+        console.log(randomNum)
+        customPhrase.push(randomWords[randomNum])
+      }
+      setRandomWords(customPhrase)
+    }
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
+      console.log('There was a problem with the fetch operation:', error);
     } finally {
       console.log("request finsihed")  // Stop loading after the request
     }
   };
 
   useEffect(() => {
-    // The API request
+    console.log('cookies loaded')
+    const cookiesStoredMode = getCookie("mode")
+    const cookiesStoredParams = getCookie("params")
+    if(cookiesStoredMode != null && cookiesStoredParams != null){
+      const newParams = cookiesStoredParams.split(",");
+      console.log(cookiesStoredMode, cookiesStoredParams, "cokoies")
+      setMode(parseInt(cookiesStoredMode))
+      if (JSON.stringify(newParams) !== JSON.stringify(params)) {
+        setParams(newParams);
+      }
+    }
+    setCookiesLoaded(true);
+  }, [])
+
+
+
+  useEffect(() => {
+    console.log('attepmt to check cookies')
+    if (!cookiesLoaded) return;
     fetchData();
 
     //handle mode or param switch.
@@ -95,7 +170,8 @@ export default ({parentfunction} : TypingHandlerProps) => {
     WordContainerssCursor.current = 0
     charOnCurLine.current = 0;
     CharsPerLine.current = []
-  }, [refreshflag]);
+    setPhrase('')
+  }, [refreshflag, mode, cookiesLoaded]);
 
 
 
@@ -433,14 +509,19 @@ export default ({parentfunction} : TypingHandlerProps) => {
         )
       }
       {!isDoneTyping && (
+
         <div className="p4 flex items-center justify-center space-x-8">
-        <button className="sync-button" onClick={restartSamePhrase}>
-          <FaSync className="sync-icon"/>
-        </button>
-      </div>
+          <button className="sync-button" onClick={restartSamePhrase}>
+            <FaSync className="sync-icon"/>
+          </button>
+          <button className="next-button" onClick={parentfunction}>
+            <FaChevronCircleRight className="next-icon"/>
+          </button>
+        </div>
       )}
       </div>
     </div>
   )
-
 };
+
+

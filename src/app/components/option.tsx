@@ -8,17 +8,26 @@ interface OptionProps{
   Mode: number,
   Params: (string | number)[],
   innerText: String
+  className: string
 }
 
+export default function Option({Mode, Params, innerText, className}: OptionProps){
 
-
-export default function Option({Mode, Params, innerText}: OptionProps){
+  function setCookie(name:String, value:String, days:number) {
+    if (typeof window === 'undefined') return; // Skip on server
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    const expires = `expires=${date.toUTCString()}`;
+    document.cookie = `${name}=${value}; ${expires}; path=/`;
+  }
 
   const { mode, setMode, params, setParams, refreshflag, setFlag } = useLayoutContext();
   const onModeSelect = (optionMode: number, optionParams: (string | number)[]) => {
 
     setMode(optionMode);
+    setCookie("mode", optionMode.toString(), 7)
     setParams(optionParams);
+    setCookie("params", optionParams.toString(), 7)
     if(refreshflag > 1){
       setFlag(1);
     }
@@ -36,6 +45,6 @@ export default function Option({Mode, Params, innerText}: OptionProps){
   }, [mode])
 
   return (<>
-            <div className="mode-option" onClick={() => onModeSelect(Mode, Params)}>{innerText}</div>
+            <div className={className} onClick={() => onModeSelect(Mode, Params)}>{innerText}</div>
           </>
           )}
