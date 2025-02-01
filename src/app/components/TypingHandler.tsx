@@ -48,6 +48,16 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
   let result;
   const MAXCHAR = 52
+  const punctuationMapping = {
+    Period: '.',
+    Comma: ',',
+    Exclamation: '!',
+    Question: '?',
+    Colon: ':',
+    Semicolon: ';',
+    Apostrophe: "'s",
+    Dash: '-',
+  };
 
   function getCookie(name: String) {
     const cookies = document.cookie.split(';');
@@ -112,18 +122,29 @@ export default ({parentfunction} : TypingHandlerProps) => {
       }
 
     if(mode == 3){
-      console.log(params[1])
-      var customPhrase: String[] = []
-      var randomWords: String[] = [];
+      console.log(params, "PARMASA MODE 3")
+      var customPhrase: string[] = []
+      var randomWords: string[] = [];
+      var randomPunctuations:string[] = []
+
+      var randomWord = ""
 
       if(typeof(params[1]) == 'string'){
         randomWords = params[1].replace(/  +/g, ' ').trim().split(' ')
+      }
+      if(typeof(params[2]) == 'string'){
+        randomPunctuations = params[2].replace(/  +/g, ' ').trim().split(' ')
       }
       console.log(randomWords)
       for(let i = 0; i < Number(params[0]); i++){
         randomNum = Math.floor(Math.random() * randomWords.length);
         console.log(randomNum)
-        customPhrase.push(randomWords[randomNum])
+        randomWord = randomWords[randomNum]
+        if(Math.random() < 0.2){
+          var randomNum2 = Math.floor(Math.random() * randomPunctuations.length);
+          randomWord += punctuationMapping[randomPunctuations[randomNum2] as keyof typeof punctuationMapping];
+        }
+        customPhrase.push(randomWord)
       }
       setRandomWords(customPhrase)
     }

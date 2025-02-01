@@ -12,10 +12,21 @@ export default () => {
   const [promptLengthValue, setPromptLengthValue] = useState("1");
   const [userInputValue, setUserInputValue] = useState("Default");
   const [text, setText] = useState<string>('');
+  const [checkedLabels, setCheckedLabels] = useState<string[]>([]);
 
   const handleInputFilter = (event: React.FormEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement;
     target.value = target.value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+  };
+
+  const handleToggle = (label: string, isChecked: boolean) => {
+    if (isChecked) {
+      setCheckedLabels((prevLabels) => [...prevLabels, label]);
+    } else {
+      setCheckedLabels((prevLabels) => prevLabels.filter((item) => item !== label));
+    }
+    console.log(checkedLabels)
+    console.log(checkedLabels.join('a'))
   };
 
   const handlePromptLengthFilter = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -60,42 +71,66 @@ export default () => {
         <div className="checkbox-section">
           <div className="checkbox-group">
             <label className="toggle">
-              <input type="checkbox" />
+              <input
+              type="checkbox"
+              onChange={(e) => handleToggle("Period", e.target.checked)}
+              />
               <span className="toggle-slider"></span>
               <span className="toggle-label">Period ( . )</span>
             </label>
             <label className="toggle">
-              <input type="checkbox" />
+            <input
+              type="checkbox"
+              onChange={(e) => handleToggle("Comma", e.target.checked)}
+              />
               <span className="toggle-slider"></span>
               <span className="toggle-label">Comma ( , )</span>
             </label>
             <label className="toggle">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                onChange={(e) => handleToggle("Question", e.target.checked)}
+                />
               <span className="toggle-slider"></span>
               <span className="toggle-label">Question Mark ( ? )</span>
             </label>
             <label className="toggle">
-              <input type="checkbox" />
+              <input
+              type="checkbox"
+              onChange={(e) => handleToggle("Exclamation", e.target.checked)}
+              />
               <span className="toggle-slider"></span>
               <span className="toggle-label">Exclamation ( ! ) </span>
             </label>
             <label className="toggle">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                onChange={(e) => handleToggle("Semicolon", e.target.checked)}
+                />
               <span className="toggle-slider"></span>
               <span className="toggle-label">Semicolon ( ; )</span>
             </label>
             <label className="toggle">
-              <input type="checkbox" />
+                <input
+                type="checkbox"
+                onChange={(e) => handleToggle("Colon", e.target.checked)}
+                />
               <span className="toggle-slider"></span>
               <span className="toggle-label">Colon ( : ) </span>
             </label>
             <label className="toggle">
-              <input type="checkbox" />
+                <input
+                type="checkbox"
+                onChange={(e) => handleToggle("Apostrophe", e.target.checked)}
+                />
               <span className="toggle-slider"></span>
               <span className="toggle-label">Apostrophe ( ' )</span>
             </label>
             <label className="toggle">
-              <input type="checkbox" />
+                <input
+                type="checkbox"
+                onChange={(e) => handleToggle("Dash", e.target.checked)}
+                />
               <span className="toggle-slider"></span>
               <span className="toggle-label">Dash ( - )</span>
             </label>
@@ -117,7 +152,7 @@ export default () => {
           {/* Pass state values as props */}
           <Option
             Mode={3}
-            Params={[promptLengthValue, userInputValue]}
+            Params={[promptLengthValue, userInputValue, checkedLabels.join(' ')]}
             className={"start-button"}
             innerText={"Start"}
           />
