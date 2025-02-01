@@ -9,8 +9,8 @@ export default () => {
   const userInput = useRef<HTMLTextAreaElement>(null);
 
   // State to store the values of the refs
-  const [promptLengthValue, setPromptLengthValue] = useState("");
-  const [userInputValue, setUserInputValue] = useState("");
+  const [promptLengthValue, setPromptLengthValue] = useState("1");
+  const [userInputValue, setUserInputValue] = useState("Default");
   const [text, setText] = useState<string>('');
 
   const handleInputFilter = (event: React.FormEvent<HTMLInputElement>) => {

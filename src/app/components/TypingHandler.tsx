@@ -445,7 +445,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
       <div className="text-center space-y-6">
       {
         !isDoneTyping ? (
-          WordContainerss && WordContainerss.length > 1 ? (
+          WordContainerss && WordContainerss.length > 0 ? (
             <div className="container">
               <div className="mx-auto w-1/2" >
                 <div
