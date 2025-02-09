@@ -184,6 +184,12 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
 
   const restartSamePhrase = () => {
+    console.log('restart same phrase')
+    const all_words =  document.getElementById('all-words')
+      if(all_words){
+        console.log('askjdef')
+        all_words.style.bottom = '0em'
+      }
     setPhrase(phrase + ' ')
     setWords(randomWords)
     setUnTypedLetters([(<React.Fragment key={1}></React.Fragment>)])
@@ -198,6 +204,7 @@ export default ({parentfunction} : TypingHandlerProps) => {
     isTypingStarted.current = false
     keyIndex.current = 0;
     letters.current = []
+    
     randomWords.forEach((val, index) => {
       const splitWord = val.split('')
       letters.current.push(splitWord);
@@ -219,7 +226,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
     });
 
   }, [randomWords])
-
 
 //Calculate JSXLetters and memoize them to reduce load time on longer phrases since itll cache the result
   var JSXLetter: React.ReactElement[] = useMemo(() =>{
