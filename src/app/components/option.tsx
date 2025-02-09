@@ -42,7 +42,7 @@ export default function Option({Mode, Params, innerText, className}: OptionProps
         window.location.href = "/"
       }
     }
-  }, [mode])
+  }, [refreshflag])
 
   return (<>
             <div className={className} onClick={() => onModeSelect(Mode, Params)}>{innerText}</div>

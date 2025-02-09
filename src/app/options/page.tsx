@@ -25,8 +25,6 @@ export default () => {
     } else {
       setCheckedLabels((prevLabels) => prevLabels.filter((item) => item !== label));
     }
-    console.log(checkedLabels)
-    console.log(checkedLabels.join('a'))
   };
 
   const handlePromptLengthFilter = (event: ChangeEvent<HTMLTextAreaElement>) => {

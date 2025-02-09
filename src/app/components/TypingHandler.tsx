@@ -83,7 +83,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
   const fetchData = async () => {
     try {
-      console.log(mode)
       if(mode == 1){
         var response = await fetch('https://random-word-api.herokuapp.com/word?number=' + params[0], { signal:controller.signal  } );
         if (!response.ok) {
@@ -96,20 +95,14 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
       }
       else if(mode == 2){
-        console.log('pulling paragraph')
         var response = await fetch('/api/paragraphs')
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         result = await response.json();
-        console.log(result)
         var randomNum;
         do{
-          console.log('is this even repeating? this should btw')
           randomNum = Math.floor(Math.random() * result.length);
-          console.log(randomNum);
-          console.log(randomNum in pastRecentRandomChars.current)
-          console.log(pastRecentRandomChars.current)
         }while(pastRecentRandomChars.current.includes(randomNum))
         if(pastRecentRandomChars.current.length >= 3){
           pastRecentRandomChars.current.shift()
@@ -122,7 +115,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
       }
 
     if(mode == 3){
-      console.log(params, "PARMASA MODE 3")
       var customPhrase: string[] = []
       var randomWords: string[] = [];
       var randomPunctuations:string[] = []
@@ -135,10 +127,8 @@ export default ({parentfunction} : TypingHandlerProps) => {
       if(typeof(params[2]) == 'string'){
         randomPunctuations = params[2].replace(/  +/g, ' ').trim().split(' ')
       }
-      console.log(randomWords)
       for(let i = 0; i < Number(params[0]); i++){
         randomNum = Math.floor(Math.random() * randomWords.length);
-        console.log(randomNum)
         randomWord = randomWords[randomNum]
         if(Math.random() < 0.2){
           var randomNum2 = Math.floor(Math.random() * randomPunctuations.length);
@@ -156,12 +146,10 @@ export default ({parentfunction} : TypingHandlerProps) => {
   };
 
   useEffect(() => {
-    console.log('cookies loaded')
     const cookiesStoredMode = getCookie("mode")
     const cookiesStoredParams = getCookie("params")
     if(cookiesStoredMode != null && cookiesStoredParams != null){
       const newParams = cookiesStoredParams.split(",");
-      console.log(cookiesStoredMode, cookiesStoredParams, "cokoies")
       setMode(parseInt(cookiesStoredMode))
       if (JSON.stringify(newParams) !== JSON.stringify(params)) {
         setParams(newParams);
@@ -173,13 +161,11 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
 
   useEffect(() => {
-    console.log('attepmt to check cookies')
     if (!cookiesLoaded) return;
     fetchData();
 
     //handle mode or param switch.
     if (tabRef.current) {
-      console.log('focused')
       tabRef.current.focus();
     }
     setIsDoneTyping(false)
@@ -198,7 +184,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
 
   const restartSamePhrase = () => {
-    console.log('here')
     setPhrase(phrase + ' ')
     setWords(randomWords)
     setUnTypedLetters([(<React.Fragment key={1}></React.Fragment>)])
@@ -218,7 +203,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
       letters.current.push(splitWord);
     });
     if (tabRef.current) {
-      console.log('focused')
       tabRef.current.focus();
     }
   }
@@ -239,7 +223,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
 //Calculate JSXLetters and memoize them to reduce load time on longer phrases since itll cache the result
   var JSXLetter: React.ReactElement[] = useMemo(() =>{
-    console.log(letters)
     const lettersArray: React.ReactElement[] = [];
     letters.current.forEach((val) => {
       val.forEach((val2) => {
@@ -249,7 +232,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
     });
     lettersArray.pop(); // Remove last space if necessary
-    console.log(lettersArray)
     if(lettersArray.length > 0){
       var currentElement = lettersArray[0]
       var newElement = React.cloneElement(currentElement, {className: `untyped newline-cursor text-2xl`})
@@ -259,10 +241,8 @@ export default ({parentfunction} : TypingHandlerProps) => {
   }, [phrase]);
 
   useEffect(() => {
-    console.log('here2')
     setUnTypedLetters(JSXLetter);
     if (tabRef.current) {
-      console.log('from here2')
       tabRef.current.focus();
     }
   }, [JSXLetter])
@@ -271,7 +251,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
   //Causes the typing area to be refocused
   //Triggers on reference changing. I.E when the tabRef is set to a new ref for switching tabs.
   useEffect(() => {
-    console.log('when does this trigger?')
     // Focus the input when the component mounts
     if (tabRef.current) {
       tabRef.current.focus();
@@ -288,8 +267,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
   useEffect(() => {
     // If unTypedLetters is empty, call the parent function
     if (unTypedLetters.length === TypedLettersCursor && keyIndex.current > 0) {
-      console.log('done typing')
-      console.log()
       setIsDoneTyping(true);
       timeEnd.current = performance.now()
     }
@@ -305,12 +282,10 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
     //Check if the next char starts on the next line
     if(unTypedLetters[TypedLettersCursor]?.props.letter.replace(/\u00A0/g, ' ') == ' '){
-      console.log('space char was filled')
       WordContainerssCursor.current += 2;
       charOnCurLine.current += WordContainerss[WordContainerssCursor.current].props.letterCount
       UserCurWord.current += 1;
       if(charOnCurLine.current > MAXCHAR){
-        console.log('newline imminent')
         CharsPerLine.current.push(charOnCurLine.current -= WordContainerss[WordContainerssCursor.current].props.letterCount)
         charOnCurLine.current = WordContainerss[WordContainerssCursor.current].props.letterCount
         triggerNewLine.current = true
@@ -342,12 +317,10 @@ export default ({parentfunction} : TypingHandlerProps) => {
   const HandleBackSpace = () => {
 
     if(unTypedLetters[TypedLettersCursor-1]?.props.letter.replace(/\u00A0/g, ' ') == ' '){
-      console.log('space char was deleted')
       charOnCurLine.current -= WordContainerss[WordContainerssCursor.current].props.letterCount
       WordContainerssCursor.current -= 2;
       UserCurWord.current -= 1;
       if(charOnCurLine.current <= 0){
-        console.log('wentback one line')
         charOnCurLine.current = CharsPerLine.current.pop() ?? 0;
         TriggerPrevLine.current = true
       }

@@ -59,9 +59,6 @@ export default function RootLayout({
             <div className="mode-selector">
               <RedirectDiv innerText="CUSTOM" link="/options" className="mode-header"></RedirectDiv>
             </div>
-
-            <FaTools className="text-2xl cursor-pointer" title="In Development"/>
-            <FaTools className="text-2xl cursor-pointer" title="In Development"/>
           </nav>
           <div className="w-40"></div>
         </div>
