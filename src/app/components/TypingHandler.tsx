@@ -227,7 +227,6 @@ export default ({parentfunction} : TypingHandlerProps) => {
 
   }, [randomWords])
 
-  Because, I don't know who you are. But maybe we, in another life. Could fall in love, have it all, and chase our daydreams. But here we are, sat across. From one another on an empty train. Getting lost in thought.
 
 //Calculate JSXLetters and memoize them to reduce load time on longer phrases since itll cache the result
   var JSXLetter: React.ReactElement[] = useMemo(() =>{
